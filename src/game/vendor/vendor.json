@@ -1,0 +1,35 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "qbIP4YMpzr2R99zTTwNP2eC1/CA=",
+			"path": "github.com/coreos/etcd/client",
+			"revision": "23b5a2910179101795c92f4d23eb8c0f39498f68",
+			"revisionTime": "2017-02-03T23:54:20Z"
+		},
+		{
+			"path": "github.com/coreos/etcd/pkg/pathutil",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "CnX0nhQqOW6Or+BNkjBdhjddIIw=",
+			"path": "github.com/coreos/etcd/pkg/types",
+			"revision": "23b5a2910179101795c92f4d23eb8c0f39498f68",
+			"revisionTime": "2017-02-03T23:54:20Z"
+		},
+		{
+			"path": "github.com/coreos/etcd/version",
+			"revision": ""
+		},
+		{
+			"path": "github.com/ugorji/go/codec",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/context",
+			"revision": ""
+		}
+	],
+	"rootPath": "game"
+}
