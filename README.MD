@@ -13,3 +13,9 @@ etcd-browser https://hub.docker.com/r/denverdino/etcdbrowser/
 >docker run --rm --name etcd-browser -p 0.0.0.0:8000:8000 --env ETCD_HOST=172.17.0.2 --env AUTH_PASS=doe -t -i denverdino/etcdbrowser
 
 http://cizixs.com/2016/08/02/intro-to-etcd
+
+user govendor
+gopath -> src -> game ->vendor
+go get -u -v github.com/kardianos/govendor 
+govendor init
+govendor fetch golang.org/x/net/context
