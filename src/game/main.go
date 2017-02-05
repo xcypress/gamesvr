@@ -25,6 +25,8 @@ func main()  {
     if err != nil {
         fmt.Println(err)
     }
-
-    fmt.Println(rsp.Node.Value)
+    for _, node := range rsp.Node.Nodes {
+        fmt.Println(node.Key)
+        fmt.Println(node.Value)
+    }
 }
