@@ -56,3 +56,9 @@ govendor fetch golang.org/x/net/context
 > * 分区容忍性
 
 服务与发现满足CP
+```
+    client, err := etcdclient.New(cfg)
+    if err != nil {
+        fmt.Println(err)
+    }
+```
