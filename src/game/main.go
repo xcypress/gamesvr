@@ -1,30 +1,38 @@
 package main
 
 import (
-	"github.com/coreos/etcd/client"
+	etcdclient "github.com/coreos/etcd/client"
 	"fmt"
 	"golang.org/x/net/context"
+    "strings"
 )
+
+const 	DEFAULT_NAME_FILE    = "/backends/names"
+
 
 func main()  {
 	machines := []string{"http://172.17.0.2:2379"}
-	cfg := client.Config{
+	cfg := etcdclient.Config{
 		Endpoints:machines,
-		Transport:client.DefaultTransport,
+		Transport:etcdclient.DefaultTransport,
 	}
+    client, err := etcdclient.New(cfg)
+    if err != nil {
+        fmt.Println(err)
+    }
 
-	cli, err := client.New(cfg)
-	if err != nil {
-		fmt.Println(err)
-	}
+    kApi := etcdclient.NewKeysAPI(client)
+    rsp, err := kApi.Get(context.Background(), DEFAULT_NAME_FILE, nil)
+    if err != nil {
+        fmt.Println(err)
+        return nil
+    }
 
-	kapi := client.NewKeysAPI(cli)
-	fmt.Println("setting '/foo', key")
-	rsp, err := kapi.Set(context.Background(), "/foo", "bar", nil)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("set is done %q", rsp)
-	}
+    if rsp.Node.Dir {
+        fmt.Println("names is not a file")
+        return nil
+    }
 
+    fmt.Println(rsp.Node.Value)
+    fmt.Println(strings.Split(rsp.Node.Value, "\n"))
 }
