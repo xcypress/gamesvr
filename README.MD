@@ -51,8 +51,8 @@ govendor fetch golang.org/x/net/context
                  projects.
 
 #CAP理论
--一致性
--可用性
--分区容忍心
+> * 一致性
+> * 可用性
+> * 分区容忍性
 
 服务与发现满足CP
