@@ -40,6 +40,7 @@ func main()  {
     if err != nil {
         fmt.Println(err)
     }
+    fmt.Println("continue")
 
     fmt.Println(rsp.Node.Value)
 }
