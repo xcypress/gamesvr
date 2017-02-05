@@ -49,3 +49,10 @@ govendor fetch golang.org/x/net/context
     shell    Run a "shell" to make multiple sub-commands more efficient for large
 
                  projects.
+
+#CAP理论
+*一致性
+*可用性
+*分区容忍心
+
+服务与发现满足CP
