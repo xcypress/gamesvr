@@ -25,12 +25,10 @@ func main()  {
     rsp, err := kApi.Get(context.Background(), DEFAULT_NAME_FILE, nil)
     if err != nil {
         fmt.Println(err)
-        return nil
     }
 
     if rsp.Node.Dir {
         fmt.Println("names is not a file")
-        return nil
     }
 
     fmt.Println(rsp.Node.Value)
