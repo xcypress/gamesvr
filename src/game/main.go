@@ -4,10 +4,9 @@ import (
 	etcdclient "github.com/coreos/etcd/client"
 	"fmt"
 	"golang.org/x/net/context"
-    "strings"
 )
 
-const 	DEFAULT_NAME_FILE    = "/backends/names"
+const 	DEFAULT_NAME_FILE    = "/backends/redis"
 
 
 func main()  {
@@ -27,10 +26,5 @@ func main()  {
         fmt.Println(err)
     }
 
-    if rsp.Node.Dir {
-        fmt.Println("names is not a file")
-    }
-
     fmt.Println(rsp.Node.Value)
-    fmt.Println(strings.Split(rsp.Node.Value, "\n"))
 }
