@@ -1,7 +1,8 @@
 https://hub.docker.com/r/gliderlabs/registrator/
 >docker pull gliderlabs/registrator
 
->docker run -d -e ETCD_HOST=172.17.0.2:4001 -v /var/run/docker.sock:/var/run/docker.sock -t jwilder/docker-register
+>docker run -d  --name=registrator --net=host  --volume=/var/run/docker.sock:/tmp/docker.sock  gliderlabs/registrator:latest etcd://172.17.0.2:4001/backends
+
 
 etcd  https://hub.docker.com/r/elcolio/etcd/
 >docker pull elcolio/etcd
