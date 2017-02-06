@@ -4,11 +4,10 @@ import  (
     "net"
     "github.com/coreos/etcd/client"
     "context"
-    "log"
+    "fmt"
     "os"
     "path/filepath"
     "strings"
-    "fmt"
 )
 
 const (
@@ -48,7 +47,7 @@ func (sm *ServiceMgr) init() {
 
     cli, err := client.New(cfg)
     if err != nil {
-        log.Panic(err)
+        fmt.Println(err)
     }
     sm.etcdClient = cli
 
@@ -71,7 +70,7 @@ func (sm *ServiceMgr) watcher() {
     for {
         rsp, err := watcher.Next(context.Background())
         if err != nil {
-            log.Println(err)
+            fmt.Println(err)
             continue
         }
 
@@ -83,14 +82,14 @@ func (sm *ServiceMgr) watcher() {
         case "set", "create", "update", "compareAndSwap":
             tcpAddr, err := net.ResolveTCPAddr("tcp4", rsp.Node.Value)
             if err != nil {
-                log.Println(err)
+                fmt.Println(err)
             }
             conn, err := net.DialTCP("tcp", nil, tcpAddr)
             if err == nil {
                 sm.AddServiceMQ <- Node{rsp.Node.Key, conn}
             } else {
-                log.Println(err)
-                log.Println("can not connect ",rsp.Node.Key, rsp.Node.Value)
+                fmt.Println(err)
+                fmt.Println("can not connect ",rsp.Node.Key, rsp.Node.Value)
             }
 
         case "delete":
@@ -102,7 +101,7 @@ func (sm *ServiceMgr) watcher() {
 
 func (sm *ServiceMgr) loadNames() []string {
     kApi := client.NewKeysAPI(sm.etcdClient)
-    log.Println("reading names :", DEFAULT_NAME_FILE)
+    fmt.Println("reading names :", DEFAULT_NAME_FILE)
     rsp, err := kApi.Get(context.Background(), DEFAULT_NAME_FILE, nil)
     if err != nil {
         fmt.Println(err)
@@ -110,7 +109,7 @@ func (sm *ServiceMgr) loadNames() []string {
     }
 
     if rsp.Node.Dir {
-        log.Println("names is not a file")
+        fmt.Println("names is not a file")
     }
 
     return strings.Split(rsp.Node.Value, "/n")
@@ -118,10 +117,10 @@ func (sm *ServiceMgr) loadNames() []string {
 
 func (sm *ServiceMgr) connectAll(dir string) {
     kApi := client.NewKeysAPI(sm.etcdClient)
-    log.Println("connecting services under:", dir)
+    fmt.Println("connecting services under:", dir)
     rsp, err := kApi.Get(context.Background(), dir, &client.GetOptions{Recursive: true})
     if err != nil {
-        log.Println(err)
+        fmt.Println(err)
         return
     }
 
@@ -134,18 +133,18 @@ func (sm *ServiceMgr) connectAll(dir string) {
                 }
                 tcpAddr, err := net.ResolveTCPAddr("tcp4", rsp.Node.Value)
                 if err != nil {
-                    log.Println(err)
+                    fmt.Println(err)
                     return
                 }
                 conn, err := net.DialTCP("tcp", nil, tcpAddr)
                 if err == nil {
                     sm.AddService(service.Key, conn)
-                    log.Println("connect service:" + service.Value)
+                    fmt.Println("connect service:" + service.Value)
                 }
             }
         }
     }
-    log.Println("services add complete")
+    fmt.Println("services add complete")
     go sm.watcher()
 }
 
@@ -174,7 +173,7 @@ func (sm *ServiceMgr) RemoveService(key string) {
     }
     service := sm.services[serviceName]
     if service == nil {
-        log.Println("no such service:", serviceName)
+        fmt.Println("no such service:", serviceName)
         return
     }
 
@@ -182,7 +181,7 @@ func (sm *ServiceMgr) RemoveService(key string) {
         if service.nodes[idx].Key == key {
             service.nodes[idx].Conn.Close()
             service.nodes = append(service.nodes[:idx], service.nodes[idx+1:]...)
-            log.Println("service remove:", key)
+            fmt.Println("service remove:", key)
             return
         }
     }
