@@ -124,6 +124,11 @@ func (sm *ServiceMgr) connectAll(dir string) {
     for _, node := range rsp.Node.Nodes {
         if node.Dir {
             for _, service := range node.Nodes {
+                service_name := filepath.Dir(service.Key)
+                if !sm.known_names[service_name] {
+                    return
+                }
+
                 conn, err := net.DialTCP("tcp", nil, service.Value)
                 if err == nil {
                     sm.AddService(service.Key, conn)
