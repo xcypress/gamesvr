@@ -54,6 +54,8 @@ func (sm *ServiceMgr) Init() {
 
     sm.services = make(map[string]*service)
     sm.known_names = make(map[string]bool)
+    sm.AddServiceMQ = make(chan Node, 10)
+    sm.RemoveServiceMQ = make(chan string, 10)
 
     names := sm.loadNames()
 
@@ -74,8 +76,9 @@ func (sm *ServiceMgr) watcher() {
             fmt.Println(err)
             continue
         }
-
+        fmt.Println(rsp.Action)
         if rsp.Node.Dir {
+            fmt.Println("not file")
             continue
         }
 
