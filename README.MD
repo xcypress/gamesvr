@@ -1,4 +1,6 @@
 ##服务与发现 相关docker
+##service register and discovery based on etcd
+
 https://hub.docker.com/r/gliderlabs/registrator/
 ```bash
 docker pull gliderlabs/registrator
@@ -61,8 +63,8 @@ govendor fetch golang.org/x/net/context
                  projects.
 
 #CAP理论
-> * 一致性
-> * 可用性
-> * 分区容忍性
+ * 一致性
+ * 可用性
+ * 分区容忍性
 
 服务与发现满足CP
