@@ -1,9 +1,14 @@
 package main
 
-import "service"
+import (
+    "service"
+    "fmt"
+)
 
 func main()  {
     serviceMgr := new(service.ServiceMgr)
+    serviceMgr.Init()
+    fmt.Println("main start")
     for {
         select {
         case node := <-serviceMgr.AddServiceMQ:
