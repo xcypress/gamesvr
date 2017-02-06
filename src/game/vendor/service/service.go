@@ -8,12 +8,13 @@ import  (
     "os"
     "path/filepath"
     "strings"
+    "log"
 )
 
 const (
     DEFAULT_SERVICE_PATH = "/backends"
     DEFAULT_NAME_FILE = "backends/names"
-    DEFAULT_ETCD_HOST = "172.17.0.2:2379"
+    DEFAULT_ETCD_HOST = "http://172.17.0.2:2379"
 )
 
 type Node struct {
@@ -32,7 +33,7 @@ type ServiceMgr struct {
     etcdClient      client.Client
 }
 
-func (sm *ServiceMgr) init() {
+func (sm *ServiceMgr) Init() {
 
     machines := []string{DEFAULT_ETCD_HOST}
     if env := os.Getenv("ETCD_HOST"); env != "" {
@@ -88,7 +89,7 @@ func (sm *ServiceMgr) watcher() {
             if err == nil {
                 sm.AddServiceMQ <- Node{rsp.Node.Key, conn}
             } else {
-                fmt.Println(err)
+                log.Println(err)
                 fmt.Println("can not connect ",rsp.Node.Key, rsp.Node.Value)
             }
 
@@ -129,12 +130,12 @@ func (sm *ServiceMgr) connectAll(dir string) {
             for _, service := range node.Nodes {
                 service_name := filepath.Dir(service.Key)
                 if !sm.known_names[service_name] {
-                    return
+                    continue
                 }
                 tcpAddr, err := net.ResolveTCPAddr("tcp4", rsp.Node.Value)
                 if err != nil {
                     fmt.Println(err)
-                    return
+                    continue
                 }
                 conn, err := net.DialTCP("tcp", nil, tcpAddr)
                 if err == nil {
@@ -149,6 +150,7 @@ func (sm *ServiceMgr) connectAll(dir string) {
 }
 
 func (sm *ServiceMgr) AddService(key string, conn *net.TCPConn) {
+    fmt.Println("add service" + key)
     serviceName := filepath.Dir(key)
     if !sm.known_names[serviceName] {
         return
