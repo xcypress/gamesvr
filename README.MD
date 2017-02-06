@@ -1,26 +1,36 @@
+##服务与发现 相关docker
 https://hub.docker.com/r/gliderlabs/registrator/
->docker pull gliderlabs/registrator
+```bash
+docker pull gliderlabs/registrator
 
->docker run -d  --name=registrator --net=host  --volume=/var/run/docker.sock:/tmp/docker.sock  gliderlabs/registrator:latest etcd://172.17.0.2:4001/backends
+docker run -d  --name=registrator --net=host  --volume=/var/run/docker.sock:/tmp/docker.sock  gliderlabs/registrator:latest etcd://172.17.0.2:4001/backends
 
+```
 
 etcd  https://hub.docker.com/r/elcolio/etcd/
->docker pull elcolio/etcd
->docker run -d -p 2379:2379 -p 4001:4001 --name=etcd1 elcolio/etcd  2379 http 4001 peer
+```bash
+docker pull elcolio/etcd
+
+docker run -d -p 2379:2379 -p 4001:4001 --name=etcd1 elcolio/etcd  2379 http 4001 peer
+```
+
 
 etcd-browser https://hub.docker.com/r/denverdino/etcdbrowser/
-> docker pull denverdino/etcdbrowser
+```
+docker pull denverdino/etcdbrowser
 
->docker run --rm --name etcd-browser -p 0.0.0.0:8000:8000 --env ETCD_HOST=172.17.0.2 --env AUTH_PASS=doe -t -i denverdino/etcdbrowser
-
+docker run --rm --name etcd-browser -p 0.0.0.0:8000:8000 --env ETCD_HOST=172.17.0.2 --env AUTH_PASS=doe -t -i denverdino/etcdbrowser
+```
 http://cizixs.com/2016/08/02/intro-to-etcd
 
 user govendor
 gopath -> src -> game ->vendor
+```
 go get -u -v github.com/kardianos/govendor 
 govendor init
 govendor fetch golang.org/x/net/context
-
+```
+###govender命令
 
     init     Create the "vendor" folder and the "vendor.json" file.
 
@@ -56,9 +66,3 @@ govendor fetch golang.org/x/net/context
 > * 分区容忍性
 
 服务与发现满足CP
-```
-    client, err := etcdclient.New(cfg)
-    if err != nil {
-        fmt.Println(err)
-    }
-```
