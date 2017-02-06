@@ -81,7 +81,11 @@ func (sm *ServiceMgr) watcher() {
 
         switch rsp.Action {
         case "set", "create", "update", "compareAndSwap":
-            conn, err := net.DialTCP("tcp", nil, rsp.Node.Value)
+            tcpAddr, err := net.ResolveTCPAddr("tcp4", rsp.Node.Value)
+            if err != nil {
+                log.Println(err)
+            }
+            conn, err := net.DialTCP("tcp", nil, tcpAddr)
             if err == nil {
                 sm.AddServiceMQ <- Node{rsp.Node.Key, conn}
             } else {
@@ -129,7 +133,7 @@ func (sm *ServiceMgr) connectAll(dir string) {
                     return
                 }
                 tcpAddr, err := net.ResolveTCPAddr("tcp4", rsp.Node.Value)
-                if err {
+                if err != nil {
                     log.Println(err)
                     return
                 }
