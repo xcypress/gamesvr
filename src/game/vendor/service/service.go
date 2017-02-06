@@ -128,8 +128,12 @@ func (sm *ServiceMgr) connectAll(dir string) {
                 if !sm.known_names[service_name] {
                     return
                 }
-
-                conn, err := net.DialTCP("tcp", nil, service.Value)
+                tcpAddr, err := net.ResolveTCPAddr("tcp4", rsp.Node.Value)
+                if err {
+                    log.Println(err)
+                    return
+                }
+                conn, err := net.DialTCP("tcp", nil, tcpAddr)
                 if err == nil {
                     sm.AddService(service.Key, conn)
                     log.Println("connect service:" + service.Value)
@@ -173,7 +177,7 @@ func (sm *ServiceMgr) RemoveService(key string) {
     for idx := range service.nodes {
         if service.nodes[idx].Key == key {
             service.nodes[idx].Conn.Close()
-            service.nodes = append(service.nodes[:idx], service.nodes[idx+1]...)
+            service.nodes = append(service.nodes[:idx], service.nodes[idx+1:]...)
             log.Println("service remove:", key)
             return
         }
